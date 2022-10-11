@@ -1,44 +1,66 @@
+let thebody = document.getElementById("texto")
+let spinner = document.getElementById("loading")
 
 function myFunction() {
-    console.log("123")
-    pintarInfo() 
+    thebody.innerHTML = ""
+
+    const infoUsuarios = JSON.parse(localStorage.getItem("infoUsuarios"))
+    if(infoUsuarios && infoUsuarios.time > Date.now()){
+        tablaEnHtml(infoUsuarios.data)
+    }
+    else {
+        spinnerEnHtml()
+        traerInfo() 
+    }
 } 
-function pintarInfo() {
+function traerInfo() {
     fetch("https://reqres.in/api/users?delay=3")
     .then(data => data.json())
-    .then((data) => {
-        console.log(data)   
+    .then((data) => tablaEnHtml(data.data))
+}
 
-        let info = data["data"]
-        info.map((user) => {
-            let thebody = document.getElementById("texto")
-            let tr = document.createElement("tr")
+function tablaEnHtml(info){
+    spinner.innerHTML = ""
 
-            let t1 = document.createElement("td")
-            let t2 = document.createElement("td")
-            let t3 = document.createElement("td")
-            let t4 = document.createElement("td")
-            let t5 = document.createElement("td")
+    info.map((user) => {
+        let tr = document.createElement("tr")
 
-            t1.innerHTML = `${user.id}`
-            t2.innerHTML = `${user.email}`
-            t3.innerHTML = `${user.first_name}`
-            t4.innerHTML = `${user.last_name}`
+        let t1 = document.createElement("td")
+        let t2 = document.createElement("td")
+        let t3 = document.createElement("td")
+        let t4 = document.createElement("td")
+        let t5 = document.createElement("td")
 
-            let createimage = document.createElement("img")
+        t1.innerHTML = `${user.id}`
+        t2.innerHTML = `${user.email}`
+        t3.innerHTML = `${user.first_name}`
+        t4.innerHTML = `${user.last_name}`
 
-            createimage.src = `${user.avatar}`
-            createimage.style.borderRadius = "50%"
+        let createimage = document.createElement("img")
 
-            tr.appendChild(t1)
-            tr.appendChild(t2)
-            tr.appendChild(t3)
-            tr.appendChild(t4)
-            t5.appendChild(createimage)
-            tr.appendChild(t5)
+        createimage.src = `${user.avatar}`
+        createimage.style.borderRadius = "50%"
+        createimage.style.width = "25%"
 
+        tr.appendChild(t1)
+        tr.appendChild(t2)
+        tr.appendChild(t3)
+        tr.appendChild(t4)
+        t5.appendChild(createimage)
+        tr.appendChild(t5)
 
-            thebody.appendChild(tr)
-        })
+        thebody.appendChild(tr)
+        const infoUsuarios = {
+            data: info,
+            time: Date.now() + 60000
+        }
+        localStorage.setItem("infoUsuarios", JSON.stringify(infoUsuarios))
     })
+}
+function spinnerEnHtml(){
+    spinner.innerHTML = `
+    <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+    `
 }
