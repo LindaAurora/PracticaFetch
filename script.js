@@ -1,11 +1,17 @@
-fetch("https://reqres.in/api/users?delay=3")
-    .then(data => data.json()) 
-    .then((data)=>{
-        console.log (data)
+
+function myFunction() {
+    console.log("123")
+    pintarInfo() 
+} 
+function pintarInfo() {
+    fetch("https://reqres.in/api/users?delay=3")
+    .then(data => data.json())
+    .then((data) => {
+        console.log(data)   
 
         let info = data["data"]
-        info.map ((user)=>{
-            let thebody = document.getElementById ("texto")
+        info.map((user) => {
+            let thebody = document.getElementById("texto")
             let tr = document.createElement("tr")
 
             let t1 = document.createElement("td")
@@ -19,7 +25,7 @@ fetch("https://reqres.in/api/users?delay=3")
             t3.innerHTML = `${user.first_name}`
             t4.innerHTML = `${user.last_name}`
 
-            let createimage = document.createElement ("img")
+            let createimage = document.createElement("img")
 
             createimage.src = `${user.avatar}`
             createimage.style.borderRadius = "50%"
@@ -33,12 +39,6 @@ fetch("https://reqres.in/api/users?delay=3")
 
 
             thebody.appendChild(tr)
-
-
-
-
-
-
         })
     })
-
+}
